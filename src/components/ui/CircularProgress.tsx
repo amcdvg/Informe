@@ -3,42 +3,53 @@ import { cn } from '../../lib/utils';
 
 interface CircularProgressProps {
   value: number;
-  label: string;
   color?: string;
+  trackColor?: string;
   className?: string;
+  size?: number;
+  strokeWidth?: number;
+  children?: React.ReactNode;
 }
 
-export function CircularProgress({ value, label, color = "text-indigo-600", className }: CircularProgressProps) {
-  const radius = 36;
+export function CircularProgress({ 
+  value, 
+  color = "text-indigo-900", 
+  trackColor = "text-indigo-100",
+  className,
+  size = 220,
+  strokeWidth = 14,
+  children
+}: CircularProgressProps) {
+  const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (value / 100) * circumference;
+  const clampedValue = Math.min(value, 100);
+  const strokeDashoffset = circumference - (clampedValue / 100) * circumference;
 
   return (
-    <div className={cn("relative flex flex-col items-center justify-center", className)}>
-      <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+    <div className={cn("relative flex flex-col items-center justify-center", className)} style={{ width: size, height: size }}>
+      <svg className="transform -rotate-90" width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <circle
-          className="text-slate-100 stroke-current"
-          strokeWidth="8"
-          cx="50"
-          cy="50"
+          className={cn(trackColor, "stroke-current")}
+          strokeWidth={strokeWidth}
+          cx={size / 2}
+          cy={size / 2}
           r={radius}
           fill="transparent"
         />
         <circle
           className={cn(color, "stroke-current transition-all duration-1000 ease-out")}
-          strokeWidth="8"
+          strokeWidth={strokeWidth}
           strokeLinecap="round"
-          cx="50"
-          cy="50"
+          cx={size / 2}
+          cy={size / 2}
           r={radius}
           fill="transparent"
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
         />
       </svg>
-      <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-xl font-bold text-slate-800">{value}%</span>
-        <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">{label}</span>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        {children}
       </div>
     </div>
   );

@@ -157,28 +157,64 @@ export default function App() {
             Resumen de progreso
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="flex flex-col items-center justify-center py-8">
-              <CircularProgress value={metrics.votos.avance} label="avance" color="text-indigo-500" />
-              <h3 className="mt-4 font-bold text-slate-800">Votos Reportados</h3>
-              <p className="text-sm mt-1">
-                <span className="font-semibold text-emerald-600">{metrics.votos.reportados} rep.</span> 
-                <span className="text-slate-400 mx-1">/</span> 
-                <span className="text-slate-500 font-medium">{metrics.votos.total} total.</span>
-              </p>
+            <Card className="flex flex-col items-center justify-center py-10">
+              <CircularProgress 
+                value={metrics.votos.avance} 
+                color="text-blue-950" 
+                trackColor="text-blue-100"
+                size={240}
+                strokeWidth={16}
+              >
+                <div className="flex flex-col items-center justify-center px-4 w-full">
+                  <span className="text-5xl font-black text-blue-950 tracking-tight">
+                    {metrics.votos.reportados.toLocaleString()}
+                  </span>
+                  <span className="text-base font-medium text-slate-500 mt-1">
+                    votos actuales
+                  </span>
+                  <div className="w-2/3 h-[2px] bg-slate-200 my-3"></div>
+                  <span className="text-sm text-slate-500">
+                    meta: <span className="font-bold text-slate-800">{metrics.votos.total.toLocaleString()}</span> votos
+                  </span>
+                </div>
+              </CircularProgress>
+              
+              <div className="mt-8 text-center">
+                <div className="text-5xl font-black text-blue-950 tracking-tight">{metrics.votos.avance}%</div>
+                <div className="text-xl font-bold text-blue-950 uppercase tracking-wide mt-2">avance</div>
+              </div>
             </Card>
 
-            <Card className="flex flex-col items-center justify-center py-8">
-              <CircularProgress value={metrics.iglesias.avance} label="activos" color="text-sky-400" />
-              <h3 className="mt-4 font-bold text-slate-800">Iglesias Reportadas</h3>
-              <p className="text-sm mt-1">
-                <span className="font-semibold text-emerald-600">{metrics.iglesias.activas} rep.</span> 
-                <span className="text-slate-400 mx-1">/</span> 
-                <span className="text-slate-500 font-medium">{metrics.iglesias.total} total.</span>
-              </p>
+            <Card className="flex flex-col items-center justify-center py-10">
+              <CircularProgress 
+                value={metrics.iglesias.avance} 
+                color="text-sky-600"
+                trackColor="text-sky-100"
+                size={240}
+                strokeWidth={16}
+              >
+                <div className="flex flex-col items-center justify-center px-4 w-full">
+                  <span className="text-5xl font-black text-sky-900 tracking-tight">
+                    {metrics.iglesias.activas.toLocaleString()}
+                  </span>
+                  <span className="text-base font-medium text-slate-500 mt-1">
+                    iglesias activas
+                  </span>
+                  <div className="w-2/3 h-[2px] bg-slate-200 my-3"></div>
+                  <span className="text-sm text-slate-500">
+                    total: <span className="font-bold text-slate-800">{metrics.iglesias.total.toLocaleString()}</span> iglesias
+                  </span>
+                </div>
+              </CircularProgress>
+
+              <div className="mt-8 text-center">
+                <div className="text-5xl font-black text-sky-900 tracking-tight">{metrics.iglesias.avance}%</div>
+                <div className="text-xl font-bold text-sky-900 uppercase tracking-wide mt-2">reportadas</div>
+              </div>
             </Card>
 
-            <Card className="flex flex-col justify-center py-6 px-6">
-              <div className="flex items-center gap-3 mb-6">
+            <Card className="flex flex-col justify-between py-8 px-6">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
                   <BarChart3 size={20} />
                 </div>
@@ -199,11 +235,17 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <div className="w-full space-y-5">
+
+              <div className="flex flex-col items-center justify-center py-6">
+                <div className="text-6xl font-black text-indigo-600 tracking-tight">{metrics.votos.avance}%</div>
+                <div className="text-lg font-bold text-indigo-900/40 uppercase tracking-widest mt-1">Avance</div>
+              </div>
+
+              <div className="w-full space-y-5 mt-auto">
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="font-medium text-slate-600">Votos Reportados</span>
-                    <span className="font-bold text-indigo-600">{metrics.votos.reportados}</span>
+                    <span className="font-bold text-indigo-600">{metrics.votos.reportados.toLocaleString()}</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div className="bg-indigo-500 h-2.5 rounded-full transition-all duration-500" style={{ width: `${Math.min(metrics.votos.avance, 100)}%` }}></div>
@@ -212,7 +254,7 @@ export default function App() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="font-medium text-slate-600">Meta Total</span>
-                    <span className="font-bold text-slate-800">{metrics.votos.total}</span>
+                    <span className="font-bold text-slate-800">{metrics.votos.total.toLocaleString()}</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2.5">
                     <div className="bg-slate-300 h-2.5 rounded-full" style={{ width: '100%' }}></div>
