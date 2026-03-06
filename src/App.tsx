@@ -93,7 +93,7 @@ export default function App() {
             <MapPin size={20} />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-800 leading-tight">Panel Central de Reportes de Votos</h1>
+            <h1 className="text-xl font-bold text-slate-800 leading-tight">Panel Central de Reportes del Call Center</h1>
             <p className="text-xs text-slate-500 font-medium">Risaralda · Dashboard de Avance de Metas</p>
           </div>
         </div>
