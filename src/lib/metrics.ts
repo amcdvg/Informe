@@ -32,12 +32,15 @@ export const getChartData = (data: ChurchData[]) => {
 };
 
 export const getTopIglesias = (data: ChurchData[]) => {
-  return [...data].sort((a, b) => {
-    if (b.porcentajeAvance !== a.porcentajeAvance) {
-      return b.porcentajeAvance - a.porcentajeAvance;
-    }
-    return b.cierre - a.cierre; // Tie-breaker: higher votes
-  }).slice(0, 5);
+  return [...data]
+    .filter(iglesia => iglesia.porcentajeAvance > 0)
+    .sort((a, b) => {
+      if (b.porcentajeAvance !== a.porcentajeAvance) {
+        return b.porcentajeAvance - a.porcentajeAvance;
+      }
+      return b.cierre - a.cierre; // Tie-breaker: higher votes
+    })
+    .slice(0, 5);
 };
 
 export const getIglesiasCriticas = (data: ChurchData[]) => {

@@ -8,6 +8,12 @@ interface TableProps {
 }
 
 export function Table({ data }: TableProps) {
+  const totalLideres = data.reduce((acc, curr) => acc + curr.totalLideres, 0);
+  const totalLideresConReferidos = data.reduce((acc, curr) => acc + curr.lideresConReferidos, 0);
+  const totalMetaVotos = data.reduce((acc, curr) => acc + curr.totalReferidos, 0);
+  const totalVotosReportados = data.reduce((acc, curr) => acc + curr.cierre, 0);
+  const totalPorcentajeAvance = totalMetaVotos > 0 ? Math.round((totalVotosReportados / totalMetaVotos) * 100) : 0;
+
   return (
     <Card className="mt-6">
       <CardHeader className="flex flex-row items-center justify-between bg-white">
@@ -76,6 +82,35 @@ export function Table({ data }: TableProps) {
                   </td>
                 </tr>
               ))
+            )}
+            {data.length > 0 && (
+              <tr className="bg-indigo-50/80 border-t-2 border-indigo-100 font-bold text-slate-900">
+                <td className="px-6 py-4 uppercase text-indigo-900">Total General</td>
+                <td className="px-6 py-4">{totalLideres}</td>
+                <td className="px-6 py-4">{totalLideresConReferidos}</td>
+                <td className="px-6 py-4">{totalMetaVotos}</td>
+                <td className="px-6 py-4">{totalVotosReportados}</td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-200 text-indigo-900">
+                    {totalPorcentajeAvance}%
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  {totalPorcentajeAvance >= 80 ? (
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                      Óptimo
+                    </span>
+                  ) : totalPorcentajeAvance >= 50 ? (
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                      Regular
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                      Crítico
+                    </span>
+                  )}
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

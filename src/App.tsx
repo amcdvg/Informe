@@ -8,8 +8,15 @@ import { Table } from './components/Table';
 import { MapPin, Trophy, AlertTriangle, ChevronDown, Loader2, BarChart3 } from 'lucide-react';
 import { fetchSheetData } from './services/googleSheets';
 
+const REGIONES = {
+  'Pereira': ['CENTRO', 'CUBA', 'VILLAVICENCIO', 'POBLADO', 'PARQUE INDUSTRIAL', 'GALICIA', '2500 LOTES', 'CAIMALITO', 'PUERTO CALDAS'],
+  'Dosquebradas': ['LA POPA', 'GUADALUPE', 'ALAMEDA'],
+  'Otros municipios': ['SANTA ROSA CENTRO', 'SANTA ROSA LA HERMOSA', 'LA VIRGINIA', 'SANTUARIO', 'QUINCHIA', 'PUEBLO RICO', 'GUATICA', 'APIA', 'MISTRATO', 'LA CELIA', 'BELEN DE UMBRIA', 'MARSELLA']
+};
+
 export default function App() {
   const [selectedIglesia, setSelectedIglesia] = useState('Todas las iglesias');
+  const [selectedRegion, setSelectedRegion] = useState('Todos');
   const [data, setData] = useState<ChurchData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,13 +43,17 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
   
-  const filteredData = selectedIglesia === 'Todas las iglesias' 
-    ? data 
-    : data.filter(d => d.temploZona === selectedIglesia);
+  let filteredData = data;
+  if (selectedIglesia !== 'Todas las iglesias') {
+    filteredData = data.filter(d => d.temploZona === selectedIglesia);
+  } else if (selectedRegion !== 'Todos') {
+    const regionChurches = REGIONES[selectedRegion as keyof typeof REGIONES];
+    filteredData = data.filter(d => regionChurches.includes(d.temploZona));
+  }
 
   const metrics = calculateMetrics(filteredData);
-  const topIglesias = getTopIglesias(data);
-  const iglesiasCriticas = getIglesiasCriticas(data);
+  const topIglesias = getTopIglesias(filteredData);
+  const iglesiasCriticas = getIglesiasCriticas(filteredData);
 
   if (loading && data.length === 0) {
     return (
@@ -97,21 +108,46 @@ export default function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Filter */}
-        <div className="flex items-center gap-3 mb-8 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-          <label className="text-sm font-semibold text-slate-700">Iglesia:</label>
-          <div className="relative">
-            <select 
-              className="appearance-none bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-medium"
-              value={selectedIglesia}
-              onChange={(e) => setSelectedIglesia(e.target.value)}
-            >
-              <option value="Todas las iglesias">Todas las iglesias</option>
-              {data.map(d => (
-                <option key={d.temploZona} value={d.temploZona}>{d.temploZona}</option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-6 mb-8 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-semibold text-slate-700">Iglesia:</label>
+            <div className="relative">
+              <select 
+                className="appearance-none bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-medium"
+                value={selectedIglesia}
+                onChange={(e) => {
+                  setSelectedIglesia(e.target.value);
+                  if (e.target.value !== 'Todas las iglesias') setSelectedRegion('Todos');
+                }}
+              >
+                <option value="Todas las iglesias">Todas las iglesias</option>
+                {data.map(d => (
+                  <option key={d.temploZona} value={d.temploZona}>{d.temploZona}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-semibold text-slate-700">Totales:</label>
+            <div className="relative">
+              <select 
+                className="appearance-none bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-medium"
+                value={selectedRegion}
+                onChange={(e) => {
+                  setSelectedRegion(e.target.value);
+                  if (e.target.value !== 'Todos') setSelectedIglesia('Todas las iglesias');
+                }}
+              >
+                <option value="Todos">Todas las regiones</option>
+                <option value="Pereira">Pereira</option>
+                <option value="Dosquebradas">Dosquebradas</option>
+                <option value="Otros municipios">Otros municipios</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+            </div>
           </div>
         </div>
 
@@ -148,10 +184,18 @@ export default function App() {
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-800 leading-tight">
-                    {selectedIglesia === 'Todas las iglesias' ? 'Metas Globales' : 'Metas de la Iglesia'}
+                    {selectedIglesia !== 'Todas las iglesias' 
+                      ? 'Metas de la Iglesia' 
+                      : selectedRegion !== 'Todos'
+                        ? `Metas: ${selectedRegion}`
+                        : 'Metas Globales'}
                   </h3>
                   <p className="text-xs text-slate-500 font-medium">
-                    {selectedIglesia === 'Todas las iglesias' ? 'Progreso general' : selectedIglesia}
+                    {selectedIglesia !== 'Todas las iglesias' 
+                      ? selectedIglesia 
+                      : selectedRegion !== 'Todos'
+                        ? 'Progreso regional'
+                        : 'Progreso general'}
                   </p>
                 </div>
               </div>
@@ -195,20 +239,26 @@ export default function App() {
                 </div>
                 
                 <div className="pt-2 border-t border-slate-100">
-                  <ul className="space-y-3">
-                    {topIglesias.map((iglesia, idx) => (
-                      <li key={iglesia.temploZona} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-bold text-slate-400 w-4">{idx + 1}.</span>
-                          <span className="text-sm font-medium text-slate-700">{iglesia.temploZona}</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-emerald-600">{iglesia.cierre} votos</span>
-                          <span className="text-xs font-medium px-2 py-1 bg-slate-100 rounded-md text-slate-600">{iglesia.porcentajeAvance}%</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                  {topIglesias.length === 0 ? (
+                    <div className="py-6 text-center text-sm text-slate-500 font-medium">
+                      Aún no hay iglesias con avance registrado
+                    </div>
+                  ) : (
+                    <ul className="space-y-3">
+                      {topIglesias.map((iglesia, idx) => (
+                        <li key={iglesia.temploZona} className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-bold text-slate-400 w-4">{idx + 1}.</span>
+                            <span className="text-sm font-medium text-slate-700">{iglesia.temploZona}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-semibold text-emerald-600">{iglesia.cierre} votos</span>
+                            <span className="text-xs font-medium px-2 py-1 bg-slate-100 rounded-md text-slate-600">{iglesia.porcentajeAvance}%</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </CardContent>
             </Card>
