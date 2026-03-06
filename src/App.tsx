@@ -5,7 +5,7 @@ import { Card, CardContent } from './components/ui/Card';
 import { CircularProgress } from './components/ui/CircularProgress';
 import { Chart } from './components/Chart';
 import { Table } from './components/Table';
-import { MapPin, Trophy, AlertTriangle, ChevronDown, Loader2, ChevronRight, BarChart3 } from 'lucide-react';
+import { MapPin, Trophy, AlertTriangle, ChevronDown, Loader2, BarChart3 } from 'lucide-react';
 import { fetchSheetData } from './services/googleSheets';
 
 export default function App() {
@@ -13,8 +13,6 @@ export default function App() {
   const [data, setData] = useState<ChurchData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showTop, setShowTop] = useState(false);
-  const [showCritical, setShowCritical] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -84,7 +82,7 @@ export default function App() {
             <MapPin size={20} />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-800 leading-tight">Panel Central de Reportes Call Center</h1>
+            <h1 className="text-xl font-bold text-slate-800 leading-tight">Panel Central de Reportes de Votos</h1>
             <p className="text-xs text-slate-500 font-medium">Risaralda · Dashboard de Avance de Metas</p>
           </div>
         </div>
@@ -185,60 +183,54 @@ export default function App() {
         {selectedIglesia === 'Todas las iglesias' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <Card className="transition-all duration-200">
-              <CardContent 
-                className="p-4 flex flex-col cursor-pointer hover:bg-slate-50"
-                onClick={() => setShowTop(!showTop)}
-              >
-                <div className="flex items-center justify-between w-full">
+              <CardContent className="p-4 flex flex-col">
+                <div className="flex items-center justify-between w-full mb-4">
                   <div className="flex items-center gap-3">
                     <Trophy className="text-amber-500" size={20} />
                     <h3 className="font-bold text-slate-800">Top 5 Iglesias</h3>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">Destacados</span>
-                    <ChevronRight className={`text-slate-400 transition-transform ${showTop ? 'rotate-90' : ''}`} size={20} />
                   </div>
                 </div>
                 
-                {showTop && (
-                  <div className="mt-4 pt-4 border-t border-slate-100">
-                    <ul className="space-y-3">
-                      {topIglesias.map((iglesia, idx) => (
-                        <li key={iglesia.temploZona} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-slate-400 w-4">{idx + 1}.</span>
-                            <span className="text-sm font-medium text-slate-700">{iglesia.temploZona}</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-semibold text-emerald-600">{iglesia.cierre} votos</span>
-                            <span className="text-xs font-medium px-2 py-1 bg-slate-100 rounded-md text-slate-600">{iglesia.porcentajeAvance}%</span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <div className="pt-2 border-t border-slate-100">
+                  <ul className="space-y-3">
+                    {topIglesias.map((iglesia, idx) => (
+                      <li key={iglesia.temploZona} className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-bold text-slate-400 w-4">{idx + 1}.</span>
+                          <span className="text-sm font-medium text-slate-700">{iglesia.temploZona}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-emerald-600">{iglesia.cierre} votos</span>
+                          <span className="text-xs font-medium px-2 py-1 bg-slate-100 rounded-md text-slate-600">{iglesia.porcentajeAvance}%</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </CardContent>
             </Card>
 
             <Card className="transition-all duration-200">
-              <CardContent 
-                className="p-4 flex flex-col cursor-pointer hover:bg-slate-50"
-                onClick={() => setShowCritical(!showCritical)}
-              >
-                <div className="flex items-center justify-between w-full">
+              <CardContent className="p-4 flex flex-col">
+                <div className="flex items-center justify-between w-full mb-4">
                   <div className="flex items-center gap-3">
                     <AlertTriangle className="text-rose-500" size={20} />
                     <h3 className="font-bold text-slate-800">Iglesias Críticas</h3>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 bg-rose-100 text-rose-800 text-xs font-bold rounded-full">En Riesgo</span>
-                    <ChevronRight className={`text-slate-400 transition-transform ${showCritical ? 'rotate-90' : ''}`} size={20} />
                   </div>
                 </div>
 
-                {showCritical && (
-                  <div className="mt-4 pt-4 border-t border-slate-100">
+                <div className="pt-2 border-t border-slate-100">
+                  {iglesiasCriticas.length === 0 ? (
+                    <div className="py-6 text-center text-sm text-slate-500 font-medium">
+                      No hay iglesias en estado crítico (todas superan el 70%)
+                    </div>
+                  ) : (
                     <ul className="space-y-3">
                       {iglesiasCriticas.map((iglesia, idx) => (
                         <li key={iglesia.temploZona} className="flex items-center justify-between">
@@ -253,8 +245,8 @@ export default function App() {
                         </li>
                       ))}
                     </ul>
-                  </div>
-                )}
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
