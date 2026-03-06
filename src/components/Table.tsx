@@ -34,12 +34,12 @@ export function Table({ data }: TableProps) {
           <thead className="text-xs text-indigo-900 uppercase bg-indigo-50/50">
             <tr>
               <th className="px-6 py-4 font-semibold">Iglesia ▲</th>
-              <th className="px-6 py-4 font-semibold">Total Líderes ⇅</th>
-              <th className="px-6 py-4 font-semibold">Líderes con Referidos ⇅</th>
-              <th className="px-6 py-4 font-semibold">Meta Votos ⇅</th>
               <th className="px-6 py-4 font-semibold">Votos Reportados ⇅</th>
               <th className="px-6 py-4 font-semibold">% Avance ⇅</th>
               <th className="px-6 py-4 font-semibold">Estado</th>
+              <th className="px-6 py-4 font-semibold">Meta Votos ⇅</th>
+              <th className="px-6 py-4 font-semibold">Total Líderes ⇅</th>
+              <th className="px-6 py-4 font-semibold">Líderes con Referidos ⇅</th>
             </tr>
           </thead>
           <tbody>
@@ -56,9 +56,6 @@ export function Table({ data }: TableProps) {
               data.map((row, i) => (
                 <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4 font-medium text-slate-900">{row.temploZona}</td>
-                  <td className="px-6 py-4 text-slate-600">{row.totalLideres}</td>
-                  <td className="px-6 py-4 text-slate-600">{row.lideresConReferidos}</td>
-                  <td className="px-6 py-4 text-slate-600">{row.totalReferidos}</td>
                   <td className="px-6 py-4 text-slate-600 font-semibold">{row.cierre}</td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
@@ -80,15 +77,15 @@ export function Table({ data }: TableProps) {
                       </span>
                     )}
                   </td>
+                  <td className="px-6 py-4 text-slate-600">{row.totalReferidos}</td>
+                  <td className="px-6 py-4 text-slate-600">{row.totalLideres}</td>
+                  <td className="px-6 py-4 text-slate-600">{row.lideresConReferidos}</td>
                 </tr>
               ))
             )}
             {data.length > 0 && (
               <tr className="bg-indigo-50/80 border-t-2 border-indigo-100 font-bold text-slate-900">
                 <td className="px-6 py-4 uppercase text-indigo-900">Total General</td>
-                <td className="px-6 py-4">{totalLideres}</td>
-                <td className="px-6 py-4">{totalLideresConReferidos}</td>
-                <td className="px-6 py-4">{totalMetaVotos}</td>
                 <td className="px-6 py-4">{totalVotosReportados}</td>
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-200 text-indigo-900">
@@ -110,6 +107,9 @@ export function Table({ data }: TableProps) {
                     </span>
                   )}
                 </td>
+                <td className="px-6 py-4">{totalMetaVotos}</td>
+                <td className="px-6 py-4">{totalLideres}</td>
+                <td className="px-6 py-4">{totalLideresConReferidos}</td>
               </tr>
             )}
           </tbody>

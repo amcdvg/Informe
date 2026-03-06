@@ -11,7 +11,8 @@ import { fetchSheetData } from './services/googleSheets';
 const REGIONES = {
   'Pereira': ['CENTRO', 'CUBA', 'VILLAVICENCIO', 'POBLADO', 'PARQUE INDUSTRIAL', 'GALICIA', '2500 LOTES', 'CAIMALITO', 'PUERTO CALDAS'],
   'Dosquebradas': ['LA POPA', 'GUADALUPE', 'ALAMEDA'],
-  'Otros municipios': ['SANTA ROSA CENTRO', 'SANTA ROSA LA HERMOSA', 'LA VIRGINIA', 'SANTUARIO', 'QUINCHIA', 'PUEBLO RICO', 'GUATICA', 'APIA', 'MISTRATO', 'LA CELIA', 'BELEN DE UMBRIA', 'MARSELLA']
+  'Santa Rosa': ['SANTA ROSA CENTRO', 'SANTA ROSA LA HERMOSA'],
+  'Otros municipios': ['LA VIRGINIA', 'SANTUARIO', 'QUINCHIA', 'PUEBLO RICO', 'GUATICA', 'APIA', 'MISTRATO', 'LA CELIA', 'BELEN DE UMBRIA', 'MARSELLA']
 };
 
 export default function App() {
@@ -93,7 +94,7 @@ export default function App() {
             <MapPin size={20} />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-800 leading-tight">Panel Central de Reportes del Call Center</h1>
+            <h1 className="text-xl font-bold text-slate-800 leading-tight">Panel Central de Reportes Call Center</h1>
             <p className="text-xs text-slate-500 font-medium">Risaralda · Dashboard de Avance de Metas</p>
           </div>
         </div>
@@ -144,6 +145,7 @@ export default function App() {
                 <option value="Todos">Todas las regiones</option>
                 <option value="Pereira">Pereira</option>
                 <option value="Dosquebradas">Dosquebradas</option>
+                <option value="Santa Rosa">Santa Rosa</option>
                 <option value="Otros municipios">Otros municipios</option>
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
